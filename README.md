@@ -1,1 +1,1 @@
-# o365_spam_filter
+This script is designed to allow you to add email address or domains to the spam filter block or allow lists.
