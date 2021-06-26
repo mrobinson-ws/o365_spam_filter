@@ -1,67 +1,42 @@
-#Include GUI Elements in Script
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
-[void] [System.Windows.Forms.Application]::EnableVisualStyles()
+Add-Type -AssemblyName PresentationFramework
+[xml]$xaml = @"
+<Window
 
-    # Create Main Form
-    #Set Properties Of Main Form
-    $MainForm = New-Object System.Windows.Forms.Form
-    $MainForm.MaximizeBox = $false
-    $MainForm.MinimizeBox = $false
-    $MainForm.TopMost = $true
-    $MainForm.Autosize = $true
-    $MainForm.StartPosition = 'CenterScreen'
-    $MainForm.Text = "Please select options"
-    $MainForm.Controls.AddRange(@($AddRemoveGroupBox,$BlackWhiteGroupBox))
-    
-    # Create Group 2 For Radio Buttons
-    $BlackWhiteGroupBox = New-Object System.Windows.Forms.GroupBox
-    $BlackWhiteGroupBox.Dock = [System.Windows.Forms.DockStyle]::Top
-    $BlackWhiteGroupBox.Text = "Select Whitelist/Blacklist"
-    $BlackWhiteGroupBox.Controls.AddRange(@($WhiteRadioButton,$BlackRadioButton))
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 
-    # Create The Radio Buttons
-    $BlackRadioButton = New-Object System.Windows.Forms.RadioButton
-    $BlackRadioButton.Autosize = $true
-    $BlackRadioButton.Dock = [System.Windows.Forms.DockStyle]::Left
-    $BlackRadioButton.Checked = $true
-    $BlackRadioButton.Text = "Blacklist"
-    
-    $WhiteRadioButton = New-Object System.Windows.Forms.RadioButton
-    $WhiteRadioButton.Autosize = $true
-    $WhiteRadioButton.Dock = [System.Windows.Forms.DockStyle]::Right
-    $WhiteRadioButton.Checked = $false
-    $WhiteRadioButton.Text = "Whitelist"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  
+  Title="Please Select Options" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" Width="300" Height="200">
 
-    # Create Group 1 For Radio Buttons
-    $AddRemoveGroupBox = New-Object System.Windows.Forms.GroupBox
-    $AddRemoveGroupBox.Dock = [System.Windows.Forms.DockStyle]::Bottom
-    $AddRemoveGroupBox.Text = "Select Add/Remove"
-    $AddRemoveGroupBox.Controls.AddRange(@($AddRadioButton,$RemoveRadioButton))
-    
-    # Create The Radio Buttons
-    $AddRadioButton = New-Object System.Windows.Forms.RadioButton
-    $AddRadioButton.Autosize = $true
-    $AddRadioButton.Dock = [System.Windows.Forms.DockStyle]::Left
-    $AddRadioButton.Checked = $true
-    $AddRadioButton.Text = "Add"
-    
-    $RemoveRadioButton = New-Object System.Windows.Forms.RadioButton
-    $RemoveRadioButton.Autosize = $true
-    $RemoveRadioButton.Dock = [System.Windows.Forms.DockStyle]::Right
-    $RemoveRadioButton.Checked = $false
-    $RemoveRadioButton.Text = "Remove"
-    
-    #Add An OK Button
-    $OKButton = new-object System.Windows.Forms.Button
-    $OKButton.AutoSize = $true
-    $OKButton.Dock = [System.Windows.Forms.DockStyle]::Bottom
-    $OKButton.Text = "OK"
-    $OKButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-    $OKButton.Enabled = $true
-    $MainForm.Controls.Add($OKButton)
+    <Grid Width="300" Height="150">
 
-    $MainFormResult = $MainForm.ShowDialog()
-    $MainFormResult
-    
-    
+        <GroupBox Header="Blacklist/Whitelist?" HorizontalAlignment="Left" Height="60" Margin="10,10,0,0" VerticalAlignment="Top" Width="280">
+
+            <Grid Margin="10,10,380,6">
+
+                <RadioButton x:Name="BlackRadioButton" Content="Blacklist" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-90,0"/>
+                <RadioButton x:Name="WhiteRadioButton" Content="Whitelist" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,-180,0"/>
+
+            </Grid>
+
+        </GroupBox>
+        <GroupBox Header="Add/Remove?" HorizontalAlignment="Left" Height="60" Margin="10,70,0,0" VerticalAlignment="Top" Width="280">
+
+            <Grid Margin="10,10,380,6">
+
+                <RadioButton x:Name="AddRadioButton" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,-90,0"/>
+                <RadioButton x:Name="RemoveRadioButton" Content="Remove" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,-180,0"/>
+
+            </Grid>
+
+        </GroupBox>
+        <Button x:Name="OKButton" Content="GO" HorizontalAlignment="Left" Height="20" Margin="10,130,0,0" VerticalAlignment="Top" Width="280"/>
+
+    </Grid>
+
+</Window>
+"@
+$reader = (New-Object System.Xml.XmlNodeReader $xaml)
+$window = [Windows.Markup.XamlReader]::Load($reader)
+$window.ShowDialog()
+
