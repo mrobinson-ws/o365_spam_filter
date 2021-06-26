@@ -10,25 +10,25 @@ Add-Type -AssemblyName PresentationFramework
 
   Title="Please Select Options" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" Width="525" Height="350">
 
-    <Grid x:Name="MainForm">
+    <Grid Name="MainForm">
         <TabControl HorizontalAlignment="Left" Height="299" Margin="10,10,0,0" VerticalAlignment="Top" Width="497">
             <TabItem Header="Add">
                 <Grid Background="#FFE5E5E5">
                     <Label Content="Please Enter The Email or Domain to be Added" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.323,-0.347" Width="471"/>
-                    <TextBox x:Name="AddTextBox" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471"/>
-                    <Button x:Name="AddBlacklistButton" Content="Blacklist" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
-                    <Button x:Name="AddWhitelistButton" Content="Whitelist" HorizontalAlignment="Left" Margin="246,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
-                    <TextBlock x:Name="AddTextBlock" HorizontalAlignment="Left" Margin="10,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="87" Width="471"/>
+                    <TextBox Name="AddTextBox" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471"/>
+                    <Button Name="AddBlacklistButton" Content="Blacklist" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
+                    <Button Name="AddWhitelistButton" Content="Whitelist" HorizontalAlignment="Left" Margin="246,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
+                    <TextBlock Name="AddTextBlock" HorizontalAlignment="Left" Margin="10,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="87" Width="471"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Remove">
                 <Grid Background="#FFE5E5E5">
-                    <Button x:Name="RemoveBlacklistSenderButton" Content="Remove Blacklisted Sender" HorizontalAlignment="Left" Margin="10,211,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
-                    <Button x:Name="RemoveWhitelistSenderButton" Content="Remove Whitelisted Sender" HorizontalAlignment="Left" Margin="246,211,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
+                    <Button Name="RemoveBlacklistSenderButton" Content="Remove Blacklisted Sender" HorizontalAlignment="Left" Margin="10,211,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
+                    <Button Name="RemoveWhitelistSenderButton" Content="Remove Whitelisted Sender" HorizontalAlignment="Left" Margin="246,211,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
                     <Label Content="Please Select Option Below, A New Window Will Pop Out To Select" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="30" Width="471"/>
-                    <Button x:Name="RemoveBlacklistDomainButton" Content="Remove Blacklisted Domain" HorizontalAlignment="Left" Margin="10,159,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
-                    <Button x:Name="RemoveWhitelistDomainButton" Content="Remove Whitelisted Domain" HorizontalAlignment="Left" Margin="246,159,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
-                    <TextBlock x:Name="RemoveTextBlock" HorizontalAlignment="Left" Margin="10,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="109" Width="471"/>
+                    <Button Name="RemoveBlacklistDomainButton" Content="Remove Blacklisted Domain" HorizontalAlignment="Left" Margin="10,159,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
+                    <Button Name="RemoveWhitelistDomainButton" Content="Remove Whitelisted Domain" HorizontalAlignment="Left" Margin="246,159,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
+                    <TextBlock Name="RemoveTextBlock" HorizontalAlignment="Left" Margin="10,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="109" Width="471"/>
                 </Grid>
             </TabItem>
         </TabControl>
@@ -38,10 +38,18 @@ Add-Type -AssemblyName PresentationFramework
 "@
 
 $reader = (New-Object System.Xml.XmlNodeReader $xaml)
-$MainForm = [Windows.Markup.XamlReader]::Load($reader)
+Try{
+    $MainForm = [Windows.Markup.XamlReader]::Load($reader)
+}
+Catch{
+    Write-Host "Unable to load Windows.Markup.XamlReader.  Some possible causes for this problem include: .NET Framework is missing PowerShell must be launched with PowerShell -sta, invalid XAML code was encountered."
+    Exit
+}
 ### End XAML and Reader
 
-# Start Form Declarations
+$xaml.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name ($_.Name) -Value $MainForm.FindName($_.Name)}
+
+<#
 $AddTextBox = $MainForm.FindName("AddTextBox")
 $AddTextBlock = $MainForm.FindName("AddTextBlock")
 $RemoveTextBlock = $MainForm.FindName("RemoveTextBlock")
@@ -51,7 +59,7 @@ $RemoveBlacklistSenderButton = $MainForm.FindName("RemoveBlacklistSenderButton")
 $RemoveWhitelistSenderButton = $MainForm.FindName("RemoveWhitelistSenderButton")
 $RemoveBlacklistDomainButton = $MainForm.FindName("RemoveBlacklistDomainButton")
 $RemoveWhitelistDomainButton = $MainForm.FindName("RemoveWhitelistDomainButton")
-# End Form Declarations
+#>
 
 #Test And Connect To Microsoft Exchange Online If Needed
 try {
