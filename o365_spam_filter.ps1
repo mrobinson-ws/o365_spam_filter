@@ -39,27 +39,17 @@ Add-Type -AssemblyName PresentationFramework
 
 $reader = (New-Object System.Xml.XmlNodeReader $xaml)
 Try{
-    $MainForm = [Windows.Markup.XamlReader]::Load($reader)
+    $O365Form = [Windows.Markup.XamlReader]::Load($reader)
 }
 Catch{
     Write-Host "Unable to load Windows.Markup.XamlReader.  Some possible causes for this problem include: .NET Framework is missing PowerShell must be launched with PowerShell -sta, invalid XAML code was encountered."
     Exit
 }
+
+#Create Variables For Use In Script
+$xaml.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name ($_.Name) -Value $O365Form.FindName($_.Name)}
 ### End XAML and Reader
 
-$xaml.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name ($_.Name) -Value $MainForm.FindName($_.Name)}
-
-<#
-$AddTextBox = $MainForm.FindName("AddTextBox")
-$AddTextBlock = $MainForm.FindName("AddTextBlock")
-$RemoveTextBlock = $MainForm.FindName("RemoveTextBlock")
-$AddBlacklistButton = $MainForm.FindName("AddBlacklistButton")
-$AddWhitelistButton = $MainForm.FindName("AddWhitelistButton")
-$RemoveBlacklistSenderButton = $MainForm.FindName("RemoveBlacklistSenderButton")
-$RemoveWhitelistSenderButton = $MainForm.FindName("RemoveWhitelistSenderButton")
-$RemoveBlacklistDomainButton = $MainForm.FindName("RemoveBlacklistDomainButton")
-$RemoveWhitelistDomainButton = $MainForm.FindName("RemoveWhitelistDomainButton")
-#>
 
 #Test And Connect To Microsoft Exchange Online If Needed
 try {
@@ -96,5 +86,5 @@ $RemoveWhitelistDomainButton.Add_Click({
     $RemoveTextBlock.Text = "You clicked the Remove Whitelisted Domain Button"
 })
 
-$null = $MainForm.ShowDialog()
+$O365Form.ShowDialog()
 
