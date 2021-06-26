@@ -3,54 +3,65 @@
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 [void] [System.Windows.Forms.Application]::EnableVisualStyles()
 
-    # Create the Label.
-    $label = New-Object System.Windows.Forms.Label
-    $label.Location = New-Object System.Drawing.Size(10,10)
-    $label.Size = New-Object System.Drawing.Size(280,20)
-    $label.AutoSize = $true
-    $label.Text = $Message
+    # Create Main Form
+    #Set Properties Of Main Form
+    $MainForm = New-Object System.Windows.Forms.Form
+    $MainForm.MaximizeBox = $false
+    $MainForm.MinimizeBox = $false
+    $MainForm.TopMost = $true
+    $MainForm.Autosize = $true
+    $MainForm.StartPosition = 'CenterScreen'
+    $MainForm.Text = "Please select options"
+    $MainForm.Controls.AddRange(@($AddRemoveGroupBox,$BlackWhiteGroupBox))
+    
+    # Create Group 2 For Radio Buttons
+    $BlackWhiteGroupBox = New-Object System.Windows.Forms.GroupBox
+    $BlackWhiteGroupBox.Dock = [System.Windows.Forms.DockStyle]::Top
+    $BlackWhiteGroupBox.Text = "Select Whitelist/Blacklist"
+    $BlackWhiteGroupBox.Controls.AddRange(@($WhiteRadioButton,$BlackRadioButton))
 
-    # Create the TextBox used to capture the user's text.
-    $textBox = New-Object System.Windows.Forms.TextBox
-    $textBox.Location = New-Object System.Drawing.Size(10,40)
-    $textBox.Size = New-Object System.Drawing.Size(575,200)
-    $textBox.AcceptsReturn = $true
-    $textBox.AcceptsTab = $false
-    $textBox.Multiline = $true
-    $textBox.ScrollBars = 'Both'
+    # Create The Radio Buttons
+    $BlackRadioButton = New-Object System.Windows.Forms.RadioButton
+    $BlackRadioButton.Autosize = $true
+    $BlackRadioButton.Dock = [System.Windows.Forms.DockStyle]::Left
+    $BlackRadioButton.Checked = $true
+    $BlackRadioButton.Text = "Blacklist"
+    
+    $WhiteRadioButton = New-Object System.Windows.Forms.RadioButton
+    $WhiteRadioButton.Autosize = $true
+    $WhiteRadioButton.Dock = [System.Windows.Forms.DockStyle]::Right
+    $WhiteRadioButton.Checked = $false
+    $WhiteRadioButton.Text = "Whitelist"
 
-    # Create the OK button.
-    $okButton = New-Object System.Windows.Forms.Button
-    $okButton.Location = New-Object System.Drawing.Size(415,250)
-    $okButton.Size = New-Object System.Drawing.Size(75,25)
-    $okButton.Text = "OK"
-    $okButton.Add_Click({ $form.Tag = $textBox.Text; $form.Close() })
+    # Create Group 1 For Radio Buttons
+    $AddRemoveGroupBox = New-Object System.Windows.Forms.GroupBox
+    $AddRemoveGroupBox.Dock = [System.Windows.Forms.DockStyle]::Bottom
+    $AddRemoveGroupBox.Text = "Select Add/Remove"
+    $AddRemoveGroupBox.Controls.AddRange(@($AddRadioButton,$RemoveRadioButton))
+    
+    # Create The Radio Buttons
+    $AddRadioButton = New-Object System.Windows.Forms.RadioButton
+    $AddRadioButton.Autosize = $true
+    $AddRadioButton.Dock = [System.Windows.Forms.DockStyle]::Left
+    $AddRadioButton.Checked = $true
+    $AddRadioButton.Text = "Add"
+    
+    $RemoveRadioButton = New-Object System.Windows.Forms.RadioButton
+    $RemoveRadioButton.Autosize = $true
+    $RemoveRadioButton.Dock = [System.Windows.Forms.DockStyle]::Right
+    $RemoveRadioButton.Checked = $false
+    $RemoveRadioButton.Text = "Remove"
+    
+    #Add An OK Button
+    $OKButton = new-object System.Windows.Forms.Button
+    $OKButton.AutoSize = $true
+    $OKButton.Dock = [System.Windows.Forms.DockStyle]::Bottom
+    $OKButton.Text = "OK"
+    $OKButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $OKButton.Enabled = $true
+    $MainForm.Controls.Add($OKButton)
 
-    # Create the Cancel button.
-    $cancelButton = New-Object System.Windows.Forms.Button
-    $cancelButton.Location = New-Object System.Drawing.Size(510,250)
-    $cancelButton.Size = New-Object System.Drawing.Size(75,25)
-    $cancelButton.Text = "Cancel"
-    $cancelButton.Add_Click({ $form.Tag = $null; $form.Close() })
-
-    # Create the form.
-    $form = New-Object System.Windows.Forms.Form
-    $form.Text = $WindowTitle
-    $form.Size = New-Object System.Drawing.Size(610,320)
-    $form.FormBorderStyle = 'FixedSingle'
-    $form.StartPosition = "CenterScreen"
-    $form.AutoSizeMode = 'GrowAndShrink'
-    $form.Topmost = $True
-    $form.AcceptButton = $okButton
-    $form.CancelButton = $cancelButton
-    $form.ShowInTaskbar = $true
-
-    # Add all of the controls to the form.
-    $form.Controls.Add($label)
-    $form.Controls.Add($textBox)
-    $form.Controls.Add($okButton)
-    $form.Controls.Add($cancelButton)
-
-    # Initialize and show the form.
-    $form.Add_Shown({$form.Activate()})
-    $form.ShowDialog() > $null  # Trash the text of the button that was clicked.
+    $MainFormResult = $MainForm.ShowDialog()
+    $MainFormResult
+    
+    
