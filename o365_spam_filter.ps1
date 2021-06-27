@@ -74,7 +74,7 @@ $RemoveBlacklistSenderButton.Add_Click({
     Clear-Variable rfbl -ErrorAction SilentlyContinue
     Clear-Variable rfbls -ErrorAction SilentlyContinue
     $rfbls = Get-HostedContentFilterPolicy Default
-    $rfbls.BlockedSenders | Select-Object -Property Sender | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
+    $rfbls = $rfbls.BlockedSenders | Select-Object -Property Sender | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
     foreach($rfbl in $rfbls){
         $RemoveTextBlock.Text = "Processing $($rfbl.sender)"
         Set-HostedContentFilterPolicy Default -BlockedSenders @{Remove="$($rfbl.sender)"}
@@ -87,7 +87,7 @@ $RemoveWhitelistSenderButton.Add_Click({
     Clear-Variable rfwl -ErrorAction SilentlyContinue
     Clear-Variable rfwls -ErrorAction SilentlyContinue
     $rfwls = Get-HostedContentFilterPolicy Default
-    $rfwls.AllowedSenders | Select-Object -Property Sender | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
+    $rfwls = $rfwls.AllowedSenders | Select-Object -Property Sender | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
     foreach($rfwl in $rfwls){
         $RemoveTextBlock.Text = "Processing $($rfwl.sender)"
         Set-HostedContentFilterPolicy Default -AllowedSenders @{Remove="$($rfwl.sender)"}
@@ -96,11 +96,27 @@ $RemoveWhitelistSenderButton.Add_Click({
 })
 
 $RemoveBlacklistDomainButton.Add_Click({
-    $RemoveTextBlock.Text = "You clicked the Remove Blacklisted Domain Button"
+    Clear-Variable rdfbl -ErrorAction SilentlyContinue
+    Clear-Variable rdfbls -ErrorAction SilentlyContinue
+    $rdfbls = Get-HostedContentFilterPolicy Default
+    $rdfbls = $rdfbls.BlockedSenderDomains | Select-Object -Property Domain | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
+    foreach($rdfbl in $rdfbls){
+        $RemoveTextBlock.Text = "Processing $($rdfbl.Domain)"
+        Set-HostedContentFilterPolicy Default -BlockedSenderDomains @{Remove="$($rdfbl.Domain)"}
+        $RemoveTextBlock.Text = "Removed $($rdfbl.Domain) from Whitelist"
+    }
 })
 
 $RemoveWhitelistDomainButton.Add_Click({
-    $RemoveTextBlock.Text = "You clicked the Remove Whitelisted Domain Button"
+    Clear-Variable rdfwl -ErrorAction SilentlyContinue
+    Clear-Variable rdfwls -ErrorAction SilentlyContinue
+    $rdfwls = Get-HostedContentFilterPolicy Default
+    $rdfwls = $rdfwls.AllowedSenderDomains | Select-Object -Property Domain | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
+    foreach($rdwfl in $rdfwls){
+        $RemoveTextBlock.Text = "Processing $($rdwfl.Domain)"
+        Set-HostedContentFilterPolicy Default -AllowedSenderDomains @{Remove="$($rdwfl.Domain)"}
+        $RemoveTextBlock.Text = "Removed $($rdwfl.Domain) from Whitelist"
+    }
 })
 
 $null = $O365Form.ShowDialog()
