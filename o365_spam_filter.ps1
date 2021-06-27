@@ -53,6 +53,7 @@ Catch{
 
 #Create Variables For Use In Script Automatically
 $xaml.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name ($_.Name) -Value $O365Form.FindName($_.Name)}
+
 ### End XAML, Reader, and Declarations
 
 
