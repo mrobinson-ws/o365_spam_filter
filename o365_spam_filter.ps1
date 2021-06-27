@@ -19,7 +19,7 @@ Add-Type -AssemblyName PresentationFramework
                     <TextBox Name="AddTextBox" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471"/>
                     <Button Name="AddBlacklistButton" Content="Blacklist" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
                     <Button Name="AddWhitelistButton" Content="Whitelist" HorizontalAlignment="Left" Margin="246,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
-                    <TextBox Name="AddTextBlock" HorizontalAlignment="Left" Height="109" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" IsReadOnly="True"/>
+                    <TextBox Name="AddTextBlock" HorizontalAlignment="Left" Height="109" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Background="#FF646464" SelectionBrush="#FF00C8FF"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Remove">
@@ -29,7 +29,7 @@ Add-Type -AssemblyName PresentationFramework
                     <Label Content="Please Select Option Below, A New Window Will Pop Out To Select" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="30" Width="471"/>
                     <Button Name="RemoveBlacklistDomainButton" Content="Remove Blacklisted Domain" HorizontalAlignment="Left" Margin="10,159,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
                     <Button Name="RemoveWhitelistDomainButton" Content="Remove Whitelisted Domain" HorizontalAlignment="Left" Margin="246,159,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
-                    <TextBox Name="RemoveTextBlock" HorizontalAlignment="Left" Height="109" Margin="10,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" IsReadOnly="True"/>
+                    <TextBox Name="RemoveTextBlock" HorizontalAlignment="Left" Height="109" Margin="10,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Background="#FF646464" SelectionBrush="#FF00C8FF"/>
                 </Grid>
             </TabItem>
         </TabControl>
@@ -64,22 +64,24 @@ catch {
 }
 
 $AddBlacklistButton.Add_Click({
-    $AddTextBlock.Text = "You clicked the Add Blacklist Button"
+    $AddTextBlock.AppendText("You clicked the Add Blacklist Button`n")
+    $AddTextBlock.ScrollToEnd()
 })
 
 $AddWhitelistButton.Add_Click({
-    $AddTextBlock.Text = "You clicked the Add Whitelist Button"
+    $AddTextBlock.AppendText("You clicked the Add Whitelist Button`n")
+    $AddTextBlock.ScrollToEnd()
 })
 
 $RemoveBlacklistSenderButton.Add_Click({
     Clear-Variable rfbl -ErrorAction SilentlyContinue
     Clear-Variable rfbls -ErrorAction SilentlyContinue
-    Clear-Variable RemoveTextBlock.Text -ErrorAction SilentlyContinue
     $rfbls = Get-HostedContentFilterPolicy Default
     $rfbls = $rfbls.BlockedSenders | Select-Object -Property Sender | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
     foreach($rfbl in $rfbls){
         Set-HostedContentFilterPolicy Default -BlockedSenders @{Remove="$($rfbl.sender)"}
-        $RemoveTextBlock.AppendText("Removed $($rfbl.Sender) from Blacklist`n`r")
+        $RemoveTextBlock.AppendText("Removed $($rfbl.Sender) from Sender Blacklist`n")
+        $RemoveTextBlock.ScrollToEnd()
     }
     
 })
@@ -87,38 +89,37 @@ $RemoveBlacklistSenderButton.Add_Click({
 $RemoveWhitelistSenderButton.Add_Click({
     Clear-Variable rfwl -ErrorAction SilentlyContinue
     Clear-Variable rfwls -ErrorAction SilentlyContinue
-    Clear-Variable RemoveTextBlock.Text -ErrorAction SilentlyContinue
     $rfwls = Get-HostedContentFilterPolicy Default
     $rfwls = $rfwls.AllowedSenders | Select-Object -Property Sender | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
     foreach($rfwl in $rfwls){
         Set-HostedContentFilterPolicy Default -AllowedSenders @{Remove="$($rfwl.sender)"}
-        $RemoveTextBlock.AppendText("Removed $($rfwl.Sender) from Whitelist`n`r")
+        $RemoveTextBlock.AppendText("Removed $($rfwl.Sender) from Sender Whitelist`n")
+        $RemoveTextBlock.ScrollToEnd()
     }
 })
 
 $RemoveBlacklistDomainButton.Add_Click({
     Clear-Variable rdfbl -ErrorAction SilentlyContinue
     Clear-Variable rdfbls -ErrorAction SilentlyContinue
-    Clear-Variable RemoveTextBlock.Text -ErrorAction SilentlyContinue
     $rdfbls = Get-HostedContentFilterPolicy Default
     $rdfbls = $rdfbls.BlockedSenderDomains | Select-Object -Property Domain | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
     foreach($rdfbl in $rdfbls){
         Set-HostedContentFilterPolicy Default -BlockedSenderDomains @{Remove="$($rdfbl.Domain)"}
-        $RemoveTextBlock.AppendText("Removed $($rdfbl.Domain) from Whitelist`n`r")
+        $RemoveTextBlock.AppendText("Removed $($rdfbl.Domain) from Domain Blacklist`n")
+        $RemoveTextBlock.ScrollToEnd()
     }
 })
 
 $RemoveWhitelistDomainButton.Add_Click({
     Clear-Variable rdfwl -ErrorAction SilentlyContinue
     Clear-Variable rdfwls -ErrorAction SilentlyContinue
-    Clear-Variable RemoveTextBlock.Text -ErrorAction SilentlyContinue
     $rdfwls = Get-HostedContentFilterPolicy Default
     $rdfwls = $rdfwls.AllowedSenderDomains | Select-Object -Property Domain | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
     foreach($rdwfl in $rdfwls){
         Set-HostedContentFilterPolicy Default -AllowedSenderDomains @{Remove="$($rdwfl.Domain)"}
-        $RemoveTextBlock.AppendText("Removed $($rdwfl.Domain) from Whitelist`n`r")
+        $RemoveTextBlock.AppendText("Removed $($rdwfl.Domain) from Domain Whitelist`n")
+        $RemoveTextBlock.ScrollToEnd()
     }
 })
 
 $null = $O365Form.ShowDialog()
-
