@@ -19,7 +19,7 @@ Add-Type -AssemblyName PresentationFramework
                     <TextBox Name="AddTextBox" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471"/>
                     <Button Name="AddBlacklistButton" Content="Blacklist" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
                     <Button Name="AddWhitelistButton" Content="Whitelist" HorizontalAlignment="Left" Margin="246,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
-                    <TextBox Name="AddTextBlock" HorizontalAlignment="Left" Height="109" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Background="#FF646464" SelectionBrush="#FF00C8FF"/>
+                    <TextBox Name="AddTextBlock" HorizontalAlignment="Left" Height="109" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Background="#FF646464" Foreground="Lime"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Remove">
@@ -29,7 +29,7 @@ Add-Type -AssemblyName PresentationFramework
                     <Label Content="Please Select Option Below, A New Window Will Pop Out To Select" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="30" Width="471"/>
                     <Button Name="RemoveBlacklistDomainButton" Content="Remove Blacklisted Domain" HorizontalAlignment="Left" Margin="10,159,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
                     <Button Name="RemoveWhitelistDomainButton" Content="Remove Whitelisted Domain" HorizontalAlignment="Left" Margin="246,159,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
-                    <TextBox Name="RemoveTextBlock" HorizontalAlignment="Left" Height="109" Margin="10,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Background="#FF646464" SelectionBrush="#FF00C8FF"/>
+                    <TextBox Name="RemoveTextBlock" HorizontalAlignment="Left" Height="109" Margin="10,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Background="#FF646464" Foreground="Lime"/>
                 </Grid>
             </TabItem>
         </TabControl>
