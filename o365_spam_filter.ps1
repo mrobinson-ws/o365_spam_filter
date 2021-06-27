@@ -1,7 +1,7 @@
 #Requires -Module ExchangeOnlineManagement
 Add-Type -AssemblyName PresentationFramework
 
-### Start XAML and Reader to use WPF
+### Start XAML and Reader to use WPF, as well as declare variables for use
 [xml]$xaml = @"
 <Window
 
@@ -18,18 +18,22 @@ Add-Type -AssemblyName PresentationFramework
                     <Label Content="Please Enter The Email or Domain to be Added" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.323,-0.347" Width="471"/>
                     <TextBox Name="AddTextBox" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471"/>
                     <Button Name="AddBlacklistButton" Content="Blacklist" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
-                    <Button Name="AddWhitelistButton" Content="Whitelist" HorizontalAlignment="Left" Margin="246,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
-                    <TextBox Name="AddTextBlock" HorizontalAlignment="Left" Height="109" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Background="#FF646464" Foreground="Lime"/>
+                    <Button Name="AddWhiteListButton" Content="Whitelist" HorizontalAlignment="Left" Margin="246,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
+                    <RichTextBox Name="AddTextBlock" HorizontalAlignment="Left" Height="87" Margin="10,69,0,0" VerticalAlignment="Top" Width="471" Background="#FF646464" Foreground="Lime">
+                        <FlowDocument/>
+                    </RichTextBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Remove">
+            <TabItem Header="Remove" Foreground="#FF00C8FF">
                 <Grid Background="#FFE5E5E5">
                     <Button Name="RemoveBlacklistSenderButton" Content="Remove Blacklisted Sender" HorizontalAlignment="Left" Margin="10,211,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
                     <Button Name="RemoveWhitelistSenderButton" Content="Remove Whitelisted Sender" HorizontalAlignment="Left" Margin="246,211,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
                     <Label Content="Please Select Option Below, A New Window Will Pop Out To Select" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="30" Width="471"/>
                     <Button Name="RemoveBlacklistDomainButton" Content="Remove Blacklisted Domain" HorizontalAlignment="Left" Margin="10,159,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
                     <Button Name="RemoveWhitelistDomainButton" Content="Remove Whitelisted Domain" HorizontalAlignment="Left" Margin="246,159,0,0" VerticalAlignment="Top" Width="235" Height="50"/>
-                    <TextBox Name="RemoveTextBlock" HorizontalAlignment="Left" Height="109" Margin="10,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Background="#FF646464" Foreground="Lime"/>
+                    <RichTextBox Name="RemoveTextBlock" HorizontalAlignment="Left" Height="109" Margin="10,45,0,0" VerticalAlignment="Top" Width="471" Background="#FF646464" Foreground="Lime">
+                        <FlowDocument/>
+                    </RichTextBox>
                 </Grid>
             </TabItem>
         </TabControl>
@@ -47,9 +51,9 @@ Catch{
     Exit
 }
 
-#Create Variables For Use In Script
+#Create Variables For Use In Script Automatically
 $xaml.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name ($_.Name) -Value $O365Form.FindName($_.Name)}
-### End XAML and Reader
+### End XAML, Reader, and Declarations
 
 
 #Test And Connect To Microsoft Exchange Online If Needed
@@ -64,13 +68,51 @@ catch {
 }
 
 $AddBlacklistButton.Add_Click({
-    $AddTextBlock.AppendText("You clicked the Add Blacklist Button`n")
-    $AddTextBlock.ScrollToEnd()
+    if([string]::IsNullOrwhiteSpace($AddTextBox.Text) -eq $false){
+        Try{
+            Set-HostedContentFilterPolicy Default -BlockedSenderDomains @{Add="$($AddTextbox.Text)"} -ErrorAction Stop
+            $AddTextBlock.AppendText("Added $($AddTextbox.Text) to Domain Blacklist`r")
+            $AddTextBlock.ScrollToEnd()
+        }
+        Catch{
+            Try{
+                Set-HostedContentFilterPolicy Default -BlockedSenders @{Add="$($AddTextbox.Text)"} -ErrorAction Stop
+                $AddTextBlock.AppendText("Added $($AddTextbox.Text) to Sender Blacklist`r")
+                $AddTextBlock.ScrollToEnd()
+            }
+            Catch{
+                $AddTextBlock.AppendText("$($AddTextbox.Text) is not a valid entry, please enter a domain or email address`r")
+                $AddTextBlock.ScrollToEnd()
+            }
+        }
+    }
+    elseif ([string]::IsNullOrwhiteSpace($cityTextbox.Text) -eq $true){
+        $AddTextBlock.AppendText("Please enter a domain or sender into the text box.`r")
+    }
 })
 
 $AddWhitelistButton.Add_Click({
-    $AddTextBlock.AppendText("You clicked the Add Whitelist Button`n")
-    $AddTextBlock.ScrollToEnd()
+    if([string]::IsNullOrwhiteSpace($AddTextBox.Text) -eq $false){
+        Try{
+            Set-HostedContentFilterPolicy Default -AllowedSenderDomains @{Add="$($AddTextbox.Text)"} -ErrorAction Stop
+            $AddTextBlock.AppendText("Added $($AddTextbox.Text) to Domain Whitelist`r")
+            $AddTextBlock.ScrollToEnd()
+        }
+        Catch{
+            Try{
+                Set-HostedContentFilterPolicy Default -AllowedSenders @{Add="$($AddTextbox.Text)"} -ErrorAction Stop
+                $AddTextBlock.AppendText("Added $($AddTextbox.Text) to Sender Whitelist`r")
+                $AddTextBlock.ScrollToEnd()
+            }
+            Catch{
+                $AddTextBlock.AppendText("$($AddTextbox.Text) is not a valid entry, please enter a domain or email address`r")
+                $AddTextBlock.ScrollToEnd()
+            }
+        }
+    }
+    elseif([string]::IsNullOrwhiteSpace($cityTextbox.Text) -eq $true){
+        $AddTextBlock.AppendText("Please enter a domain or sender into the text box.`r")
+    }
 })
 
 $RemoveBlacklistSenderButton.Add_Click({
@@ -80,7 +122,7 @@ $RemoveBlacklistSenderButton.Add_Click({
     $rfbls = $rfbls.BlockedSenders | Select-Object -Property Sender | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
     foreach($rfbl in $rfbls){
         Set-HostedContentFilterPolicy Default -BlockedSenders @{Remove="$($rfbl.sender)"}
-        $RemoveTextBlock.AppendText("Removed $($rfbl.Sender) from Sender Blacklist`n")
+        $RemoveTextBlock.AppendText("Removed $($rfbl.Sender) from Sender Blacklist`r")
         $RemoveTextBlock.ScrollToEnd()
     }
     
@@ -93,7 +135,7 @@ $RemoveWhitelistSenderButton.Add_Click({
     $rfwls = $rfwls.AllowedSenders | Select-Object -Property Sender | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
     foreach($rfwl in $rfwls){
         Set-HostedContentFilterPolicy Default -AllowedSenders @{Remove="$($rfwl.sender)"}
-        $RemoveTextBlock.AppendText("Removed $($rfwl.Sender) from Sender Whitelist`n")
+        $RemoveTextBlock.AppendText("Removed $($rfwl.Sender) from Sender Whitelist`r")
         $RemoveTextBlock.ScrollToEnd()
     }
 })
@@ -105,7 +147,7 @@ $RemoveBlacklistDomainButton.Add_Click({
     $rdfbls = $rdfbls.BlockedSenderDomains | Select-Object -Property Domain | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
     foreach($rdfbl in $rdfbls){
         Set-HostedContentFilterPolicy Default -BlockedSenderDomains @{Remove="$($rdfbl.Domain)"}
-        $RemoveTextBlock.AppendText("Removed $($rdfbl.Domain) from Domain Blacklist`n")
+        $RemoveTextBlock.AppendText("Removed $($rdfbl.Domain) from Domain Blacklist`r")
         $RemoveTextBlock.ScrollToEnd()
     }
 })
@@ -117,7 +159,7 @@ $RemoveWhitelistDomainButton.Add_Click({
     $rdfwls = $rdfwls.AllowedSenderDomains | Select-Object -Property Domain | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
     foreach($rdwfl in $rdfwls){
         Set-HostedContentFilterPolicy Default -AllowedSenderDomains @{Remove="$($rdwfl.Domain)"}
-        $RemoveTextBlock.AppendText("Removed $($rdwfl.Domain) from Domain Whitelist`n")
+        $RemoveTextBlock.AppendText("Removed $($rdwfl.Domain) from Domain Whitelist`r")
         $RemoveTextBlock.ScrollToEnd()
     }
 })
