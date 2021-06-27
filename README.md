@@ -1,1 +1,1 @@
-This script is designed to allow you to add email address or domains to the spam filter block or allow lists.
+This Powershell script is a GUI based tool to add or remove  senders and/or domains from both Blacklists and Whitelists in O365.
