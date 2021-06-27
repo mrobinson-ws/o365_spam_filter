@@ -86,7 +86,7 @@ $AddBlacklistButton.Add_Click({
             }
         }
     }
-    elseif ([string]::IsNullOrwhiteSpace($cityTextbox.Text) -eq $true){
+    elseif ([string]::IsNullOrwhiteSpace($AddTextbox.Text) -eq $true){
         $AddTextBlock.AppendText("Please enter a domain or sender into the text box.`r")
     }
 })
@@ -110,7 +110,7 @@ $AddWhitelistButton.Add_Click({
             }
         }
     }
-    elseif([string]::IsNullOrwhiteSpace($cityTextbox.Text) -eq $true){
+    elseif([string]::IsNullOrwhiteSpace($AddTextbox.Text) -eq $true){
         $AddTextBlock.AppendText("Please enter a domain or sender into the text box.`r")
     }
 })
