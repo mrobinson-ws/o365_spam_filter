@@ -153,7 +153,7 @@ $RemoveBlacklistSenderButton.Add_Click({
         $rfbls = $rfbls.BlockedSenders | Select-Object -Property Sender | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
         foreach($rfbl in $rfbls){
             Set-HostedContentFilterPolicy Default -BlockedSenders @{Remove="$($rfbl.sender)"}
-            $RemoveTextBlock.AppendText("Removed $($rfbl.Sender) from Sender Blacklist`r")
+            WriteRemoveTextBlock("Removed $($rfbl.Sender) from Sender Blacklist`r")
             $RemoveTextBlock.ScrollToEnd()
         }
     }
@@ -170,7 +170,7 @@ $RemoveWhitelistSenderButton.Add_Click({
         $rfwls = $rfwls.AllowedSenders | Select-Object -Property Sender | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
         foreach($rfwl in $rfwls){
             Set-HostedContentFilterPolicy Default -AllowedSenders @{Remove="$($rfwl.sender)"}
-            $RemoveTextBlock.AppendText("Removed $($rfwl.Sender) from Sender Whitelist`r")
+            WriteRemoveTextBlock("Removed $($rfwl.Sender) from Sender Whitelist`r")
             $RemoveTextBlock.ScrollToEnd()
         }
     }
@@ -187,7 +187,7 @@ $RemoveBlacklistDomainButton.Add_Click({
         $rdfbls = $rdfbls.BlockedSenderDomains | Select-Object -Property Domain | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
         foreach($rdfbl in $rdfbls){
             Set-HostedContentFilterPolicy Default -BlockedSenderDomains @{Remove="$($rdfbl.Domain)"}
-            $RemoveTextBlock.AppendText("Removed $($rdfbl.Domain) from Domain Blacklist`r")
+            WriteRemoveTextBlock("Removed $($rdfbl.Domain) from Domain Blacklist`r")
             $RemoveTextBlock.ScrollToEnd()
         }
     }
@@ -204,7 +204,7 @@ $RemoveWhitelistDomainButton.Add_Click({
         $rdfwls = $rdfwls.AllowedSenderDomains | Select-Object -Property Domain | Out-GridView -Passthru -Title "Select Multiple Senders By Holding Ctrl"
         foreach($rdwfl in $rdfwls){
             Set-HostedContentFilterPolicy Default -AllowedSenderDomains @{Remove="$($rdwfl.Domain)"}
-            $RemoveTextBlock.AppendText("Removed $($rdwfl.Domain) from Domain Whitelist`r")
+            WriteRemoveTextBlock("Removed $($rdwfl.Domain) from Domain Whitelist`r")
             $RemoveTextBlock.ScrollToEnd()
         }
     }
