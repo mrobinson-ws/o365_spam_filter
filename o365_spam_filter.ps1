@@ -54,6 +54,21 @@ Catch{
 #Create Variables For Use In Script Automatically
 $xaml.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name ($_.Name) -Value $O365Form.FindName($_.Name)}
 
+
+# Create Functions For Color Changing Messages
+Function WriteAddTextBlock {
+    Param(
+        [string]$text,
+        [string]$color = "Cyan"
+    )
+
+    $RichTextRange = New-Object System.Windows.Documents.TextRange( 
+        $AddTextBlock.Document.ContentEnd,$AddTextBlock.Document.ContentEnd ) 
+    $RichTextRange.Text = $text
+    $RichTextRange.ApplyPropertyValue( ( [System.Windows.Documents.TextElement]::ForegroundProperty ), $color )  
+
+}
+
 ### End XAML, Reader, and Declarations
 
 
@@ -72,23 +87,23 @@ $AddBlacklistButton.Add_Click({
     if([string]::IsNullOrwhiteSpace($AddTextBox.Text) -eq $false){
         Try{
             Set-HostedContentFilterPolicy Default -BlockedSenderDomains @{Add="$($AddTextbox.Text)"} -ErrorAction Stop
-            $AddTextBlock.AppendText("Added $($AddTextbox.Text) to Domain Blacklist`r")
+            WriteAddTextBlock("Added $($AddTextbox.Text) to Domain Blacklist`r")
             $AddTextBlock.ScrollToEnd()
         }
         Catch{
             Try{
                 Set-HostedContentFilterPolicy Default -BlockedSenders @{Add="$($AddTextbox.Text)"} -ErrorAction Stop
-                $AddTextBlock.AppendText("Added $($AddTextbox.Text) to Sender Blacklist`r")
+                WriteAddTextBlock("Added $($AddTextbox.Text) to Sender Blacklist`r")
                 $AddTextBlock.ScrollToEnd()
             }
             Catch{
-                $AddTextBlock.AppendText("$($AddTextbox.Text) is not a valid entry, please enter a domain or email address`r")
+                WriteAddTextBlock("$($AddTextbox.Text) is not a valid entry, please enter a domain or email address`r") -Color "Red"
                 $AddTextBlock.ScrollToEnd()
             }
         }
     }
     elseif ([string]::IsNullOrwhiteSpace($AddTextbox.Text) -eq $true){
-        $AddTextBlock.AppendText("Please enter a domain or sender into the text box.`r")
+        WriteAddTextBlock("Please enter a domain or sender into the text box.`r") -Color "Red"
     }
 })
 
@@ -96,23 +111,23 @@ $AddWhitelistButton.Add_Click({
     if([string]::IsNullOrwhiteSpace($AddTextBox.Text) -eq $false){
         Try{
             Set-HostedContentFilterPolicy Default -AllowedSenderDomains @{Add="$($AddTextbox.Text)"} -ErrorAction Stop
-            $AddTextBlock.AppendText("Added $($AddTextbox.Text) to Domain Whitelist`r")
+            WriteAddTextBlock("Added $($AddTextbox.Text) to Domain Whitelist`r")
             $AddTextBlock.ScrollToEnd()
         }
         Catch{
             Try{
                 Set-HostedContentFilterPolicy Default -AllowedSenders @{Add="$($AddTextbox.Text)"} -ErrorAction Stop
-                $AddTextBlock.AppendText("Added $($AddTextbox.Text) to Sender Whitelist`r")
+                WriteAddTextBlock("Added $($AddTextbox.Text) to Sender Whitelist`r")
                 $AddTextBlock.ScrollToEnd()
             }
             Catch{
-                $AddTextBlock.AppendText("$($AddTextbox.Text) is not a valid entry, please enter a domain or email address`r")
+                WriteAddTextBlock("$($AddTextbox.Text) is not a valid entry, please enter a domain or email address`r") -Color "Red"
                 $AddTextBlock.ScrollToEnd()
             }
         }
     }
     elseif([string]::IsNullOrwhiteSpace($AddTextbox.Text) -eq $true){
-        $AddTextBlock.AppendText("Please enter a domain or sender into the text box.`r")
+        WriteAddTextBlock("Please enter a domain or sender into the text box.`r") -Color "Red"
     }
 })
 
