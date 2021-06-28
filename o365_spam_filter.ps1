@@ -1,7 +1,8 @@
 Add-Type -AssemblyName PresentationFramework
 
 if(-not(Get-Module ExchangeOnlineManagement -ListAvailable)){
-    [System.Windows.MessageBox]::Show('Please Install ExchangeOnlineManagement - view ITG for details')
+    $null = [System.Windows.MessageBox]::Show('Please Install ExchangeOnlineManagement - view ITG for details')
+    Exit
 }
 
 ### Start XAML and Reader to use WPF, as well as declare variables for use
