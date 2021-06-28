@@ -1,4 +1,11 @@
-#Requires -Module ExchangeOnlineManagement
+Try{
+    Get-InstalledModule ExchangeOnlineManagement -ErrorAction Stop
+}
+Catch{
+    Set-PSRepository PSGallery -InstallationPolicy Trusted
+    Install-Module ExchangeOnlineManagement -Confirm:$False -Force
+}
+
 Add-Type -AssemblyName PresentationFramework
 
 ### Start XAML and Reader to use WPF, as well as declare variables for use
