@@ -1,12 +1,8 @@
-Try{
-    Get-InstalledModule ExchangeOnlineManagement -ErrorAction Stop
-}
-Catch{
-    Set-PSRepository PSGallery -InstallationPolicy Trusted
-    Install-Module ExchangeOnlineManagement -Confirm:$False -Force
-}
-
 Add-Type -AssemblyName PresentationFramework
+
+if(-not(Get-Module ExchangeOnlineManagement -ListAvailable)){
+    [System.Windows.MessageBox]::Show('Please Install ExchangeOnlineManagement - view ITG for details')
+}
 
 ### Start XAML and Reader to use WPF, as well as declare variables for use
 [xml]$xaml = @"
@@ -101,7 +97,7 @@ $AddBlacklistButton.Add_Click({
                 $AddTextBlock.ScrollToEnd()
             }
             Catch{
-                WriteAddTextBlock("$($AddTextbox.Text) is not a valid entry, please enter a domain or email address`r") -Color "Red"
+                WriteAddTextBlock("$_.Message indicates $($AddTextbox.Text) is potentially invalid, please review entry and try again`r") -Color "Red"
                 $AddTextBlock.ScrollToEnd()
             }
         }
@@ -125,7 +121,7 @@ $AddWhitelistButton.Add_Click({
                 $AddTextBlock.ScrollToEnd()
             }
             Catch{
-                WriteAddTextBlock("$($AddTextbox.Text) is not a valid entry, please enter a domain or email address`r") -Color "Red"
+                WriteAddTextBlock("$_.Message indicates $($AddTextbox.Text) is potentially invalid, please review entry and try again`r") -Color "Red"
                 $AddTextBlock.ScrollToEnd()
             }
         }
