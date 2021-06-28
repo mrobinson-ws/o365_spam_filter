@@ -81,12 +81,9 @@ Function WriteAddTextBlock {
 
 #Test And Connect To Microsoft Exchange Online If Needed
 try {
-    Write-Verbose -Message "Testing connection to Microsoft Exchange Online"
-    Get-Mailbox -ErrorAction Stop | Out-Null
-    Write-Verbose -Message "Already connected to Microsoft Exchange Online"
+    Get-EXOMailbox -ErrorAction Stop | Out-Null
 }
 catch {
-    Write-Verbose -Message "Connecting to Microsoft Exchange Online"
     Connect-ExchangeOnline
 }
 
