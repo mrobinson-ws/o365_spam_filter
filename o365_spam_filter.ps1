@@ -91,7 +91,7 @@ Function WriteRemoveTextBlock {
 
 #Test And Connect To Microsoft Exchange Online If Needed
 try {
-    Get-EXOMailbox -ErrorAction Stop | Out-Null
+    Get-Mailbox -ErrorAction Stop | Out-Null
 }
 catch {
     Connect-ExchangeOnline
