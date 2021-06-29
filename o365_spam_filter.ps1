@@ -1,7 +1,7 @@
 Add-Type -AssemblyName PresentationFramework
 
 if(-not(Get-Module ExchangeOnlineManagement -ListAvailable)){
-    $null = [System.Windows.MessageBox]::Show('Please Install ExchangeOnlineManagement - view ITG for details')
+    $null = [System.Windows.MessageBox]::Show('Please Install ExchangeOnlineManagement - view ITG for details https://worksmart.itglue.com/2503920/docs/7777752')
     Exit
 }
 
