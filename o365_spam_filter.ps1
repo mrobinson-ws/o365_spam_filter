@@ -19,13 +19,14 @@ if(-not(Get-Module ExchangeOnlineManagement -ListAvailable)){
         <TabControl HorizontalAlignment="Left" Height="299" Margin="10,10,0,0" VerticalAlignment="Top" Width="497">
             <TabItem Header="Add">
                 <Grid Background="#FFE5E5E5">
-                    <Label Content="Please Enter The Email or Domain to be Added" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.323,-0.347" Width="471"/>
+                    <Label Content="Please Enter The Email or Domain to be Added" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.323,-0.347" Width="257"/>
                     <TextBox Name="AddTextBox" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471"/>
                     <Button Name="AddBlacklistButton" Content="Blacklist" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
                     <Button Name="AddWhiteListButton" Content="Whitelist" HorizontalAlignment="Left" Margin="246,161,0,0" VerticalAlignment="Top" Width="235" Height="100"/>
                     <RichTextBox Name="AddTextBlock" HorizontalAlignment="Left" Height="87" Margin="10,69,0,0" VerticalAlignment="Top" Width="471" Background="#FF646464" Foreground="Cyan">
                         <FlowDocument/>
                     </RichTextBox>
+                    <Button Name="ReconnectButton" Content="Change Tenants/Reconnect" HorizontalAlignment="Left" Margin="272,10,0,0" VerticalAlignment="Top" Width="209" Height="26"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Remove" Foreground="#FF00C8FF">
@@ -96,6 +97,10 @@ try {
 catch {
     Connect-ExchangeOnline
 }
+
+$ReconnectButton.Add_Click({
+    Connect-ExchangeOnline
+})
 
 $AddBlacklistButton.Add_Click({
     if([string]::IsNullOrwhiteSpace($AddTextBox.Text) -eq $false){
